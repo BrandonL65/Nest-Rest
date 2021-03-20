@@ -29,23 +29,35 @@ export class ProductsService {
     return foundProduct.product;
   }
 
-  updateSingleProduct(id: string) {
+  updateSingleProduct(
+    valuesToUpdate: { title?: string; description?: string; price?: number },
+    id: string,
+  ) {
     let foundProduct = this.findProduct(id);
     if (foundProduct.message === 'Fail') {
       throw new NotFoundException('We could not find the product to update.');
     }
-    let newObjectState = 
+    let newlyConstructedProduct = {
+      ...foundProduct['product'],
+      ...valuesToUpdate,
+    };
+    this.products[foundProduct['id']] = newlyConstructedProduct;
+    console.log(this.products);
+    console.log(newlyConstructedProduct);
+    return this.products;
   }
 
   private findProduct(id: string) {
-    const foundProduct = this.products.find(
+    const foundProductIndex = this.products.findIndex(
       (eachProduct) => eachProduct.id === id,
     );
+    const foundProduct = this.products[foundProductIndex];
     if (!foundProduct) {
       return { message: 'Fail' };
     }
     return {
       product: foundProduct,
+      id: foundProductIndex,
       message: 'Success',
     };
   }

@@ -24,8 +24,19 @@ export class ProductsController {
     return this.productsService.getSingleProduct(id);
   }
 
-  @Patch('id')
-  updateSingleProduct(@Param('id') id: string) {
-    let response = this.productsService.updateSingleProduct(id);
+  @Patch(':id')
+  updateSingleProduct(@Param('id') id: string, @Body() Body) {
+    let updatedValues = {};
+    const { title, description, price } = Body;
+    if (title) {
+      updatedValues['title'] = title;
+    }
+    if (description) {
+      updatedValues['description'] = description;
+    }
+    if (price) {
+      updatedValues['price'] = price;
+    }
+    return this.productsService.updateSingleProduct(updatedValues, id);
   }
 }
