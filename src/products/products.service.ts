@@ -12,6 +12,7 @@ export class ProductsService {
       description,
       price,
     );
+    this.products.push(newProduct);
     return this.products[this.products.length - 1];
   }
 
@@ -39,8 +40,22 @@ export class ProductsService {
       ...foundProduct['product'],
       ...valuesToUpdate,
     };
-    this.products[foundProduct['id']] = newlyConstructedProduct;
+    this.products[foundProduct.index] = newlyConstructedProduct;
     return this.products;
+  }
+
+  deleteSingleProduct(id: string) {
+    let foundProduct = this.findProduct(id);
+    if (foundProduct.message === 'Fail') {
+      throw new NotFoundException('We could not find that product to delete.');
+    }
+
+    let productIndexToDelete = foundProduct.index;
+    let productToDelete = foundProduct.product;
+    let leftHalf = this.products.slice(0, productIndexToDelete);
+    let rightHalf = this.products.slice(productIndexToDelete + 1);
+    this.products = leftHalf.concat(rightHalf);
+    return productToDelete;
   }
 
   private findProduct(id: string) {
@@ -53,7 +68,7 @@ export class ProductsService {
     }
     return {
       product: foundProduct,
-      id: foundProductIndex,
+      index: foundProductIndex,
       message: 'Success',
     };
   }
