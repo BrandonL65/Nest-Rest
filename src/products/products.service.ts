@@ -12,8 +12,6 @@ export class ProductsService {
       description,
       price,
     );
-    this.products.push(newProduct);
-    console.log(this.products);
     return this.products[this.products.length - 1];
   }
 
@@ -42,8 +40,6 @@ export class ProductsService {
       ...valuesToUpdate,
     };
     this.products[foundProduct['id']] = newlyConstructedProduct;
-    console.log(this.products);
-    console.log(newlyConstructedProduct);
     return this.products;
   }
 
